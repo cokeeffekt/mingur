@@ -1,0 +1,1 @@
+just a clone of most image storage services but with compression.

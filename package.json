@@ -1,0 +1,27 @@
+{
+  "name": "mingur",
+  "version": "1.0.0",
+  "description": "image store with compression",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "request": "^2.65.0",
+    "shortid": "^2.2.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cokeeffekt/mingur.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cokeeffekt/mingur/issues"
+  },
+  "homepage": "https://github.com/cokeeffekt/mingur#readme"
+}
