@@ -41,7 +41,8 @@ app.get('/', function (req, res) {
 app.get('/put', function (req, res) {
 
   if (req.url.substr(0, 9) != '/put?url=') {
-    res.send('nope');
+    res.header("Content-Type", "text/plain");
+    res.send(500, 'nope');
     return false;
   }
   var url = req.url.replace('/put?url=', '');
@@ -50,7 +51,8 @@ app.get('/put', function (req, res) {
   download(url, name, function () {
     console.log(name);
   });
-  res.send(name);
+  res.header("Content-Type", "text/cache-manifest");
+  res.send('http://mingur.mooo.com/' + name);
 });
 
 app.listen(4000);
