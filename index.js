@@ -44,7 +44,6 @@ var download = function (uri, filename, callback, failed) {
     }
     request({
       url: uri,
-      method: 'HEAD',
       headers: rHeaders
     }).pipe(fs.createWriteStream('images/' + filename)).on('close', function (err) {
       if (err) {
@@ -58,7 +57,7 @@ var download = function (uri, filename, callback, failed) {
                   ].join('');
       exec(cliDo, puts);
       callback();
-      console.log(cliDo);
+      //      console.log(cliDo);
     });
   });
 };
@@ -75,10 +74,10 @@ app.get('/put', function (req, res) {
     return false;
   }
   var url = req.url.replace('/put?url=', '');
-  console.log('Fetching: ', url);
   var name = shortid.generate() + '.jpg';
+  console.log('Fetching: ', name, url);
   download(url, name, function () {
-    console.log('Success: ', name);
+    console.log('Success: ', name, url);
     res.header("Content-Type", "text/plain");
     res.send('http://mingur.mooo.com/' + name);
   }, function (err) {
