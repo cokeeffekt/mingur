@@ -64,7 +64,7 @@ app.get('/put', function (req, res) {
     res.header("Content-Type", "text/cache-manifest");
     res.send('http://mingur.mooo.com/' + name);
   }, function (err) {
-    logger.log(err)
+    console.log(err);
     res.send(500, 'failed');
   });
 
