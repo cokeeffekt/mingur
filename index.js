@@ -26,8 +26,7 @@ var download = function (uri, filename, callback, failed) {
     if (err)
       return failed(err);
     if (!_.includes(res.headers['content-type'], 'image')) {
-      console.log('Failed Headers: ', res.headers['content-type'], 'not supported');
-      return failed(err);
+      return failed('Failed Headers: ', res.headers['content-type'], 'not supported');
     }
     request(uri).pipe(fs.createWriteStream('images/' + filename)).on('close', function (err) {
       if (err) {
@@ -40,7 +39,8 @@ var download = function (uri, filename, callback, failed) {
                    "jpegtran -optimize -progressive -copy none -outfile 'images/" + filename + "' 'images/" + filename + "'"
                   ].join('');
       exec(cliDo, puts);
-      //console.log(cliDo);
+      callback();
+      console.log(cliDo);
     });
   });
 };
@@ -64,7 +64,7 @@ app.get('/put', function (req, res) {
     res.header("Content-Type", "text/plain");
     res.send('http://mingur.mooo.com/' + name);
   }, function (err) {
-    console.log(err);
+    console.log('Failed Fetch', url, err);
     res.send(500, 'failed');
   });
 
