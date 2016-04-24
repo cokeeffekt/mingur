@@ -26,7 +26,7 @@ var download = function (uri, filename, callback, failed) {
     if (err)
       return failed(err);
     if (!_.includes(res.headers['content-type'], 'image')) {
-      console.log(res.headers['content-type'], 'not supported');
+      console.log('Failed Headers: ', res.headers['content-type'], 'not supported');
       return failed(err);
     }
     request(uri).pipe(fs.createWriteStream('images/' + filename)).on('close', function (err) {
@@ -57,11 +57,11 @@ app.get('/put', function (req, res) {
     return false;
   }
   var url = req.url.replace('/put?url=', '');
-  console.log('fetching ', url);
+  console.log('Fetching: ', url);
   var name = shortid.generate() + '.jpg';
   download(url, name, function () {
-    console.log(name);
-    res.header("Content-Type", "text/cache-manifest");
+    console.log('Success: ', name);
+    res.header("Content-Type", "text/plain");
     res.send('http://mingur.mooo.com/' + name);
   }, function (err) {
     console.log(err);
