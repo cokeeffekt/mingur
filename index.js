@@ -3,12 +3,18 @@ var fs = require('fs'),
   shortid = require('shortid'),
   _ = require('lodash');
 
-var sys = require('util')
+var sys = require('util');
 var exec = require('child_process').exec;
 
 
 var express = require('express');
 var app = express();
+
+var allowCrossDomain = function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+};
+app.use(allowCrossDomain);
 
 function puts(error, stdout, stderr) {
   //  console.log(stdout)
@@ -17,6 +23,8 @@ function puts(error, stdout, stderr) {
 
 var download = function (uri, filename, callback) {
   request.head(uri, function (err, res, body) {
+    if (err)
+      return false;
     if (!_.includes(res.headers['content-type'], 'image')) {
       console.log(res.headers['content-type'], 'not supported');
       return false;
@@ -29,14 +37,14 @@ var download = function (uri, filename, callback) {
                    "jpegtran -optimize -progressive -copy none -outfile 'images/" + filename + "' 'images/" + filename + "'"
                   ].join('');
       exec(cliDo, puts);
-      console.log(cliDo);
+      //console.log(cliDo);
     });
   });
 };
 
 app.get('/', function (req, res) {
-  res.send('Give me a url and ill store it... /put?url=http://')
-})
+  res.send('Give me a url and ill store it... /put?url=http://');
+});
 
 app.get('/put', function (req, res) {
 
