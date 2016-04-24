@@ -16,19 +16,37 @@ var allowCrossDomain = function (req, res, next) {
 };
 app.use(allowCrossDomain);
 
+var rHeaders = {
+  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.104 Safari/537.36',
+  'X-Requested-With': 'XMLHttpRequest',
+  'Origin': 'http://www.spoilstoolbox.com',
+  'content-type': 'application/x-www-form-urlencoded',
+  'Referer': 'http://www.spoilstoolbox.com/',
+  'Connection': 'keep-alive',
+  'Accept-Language': 'en-US,en;q=0.8',
+};
+
 function puts(error, stdout, stderr) {
   //  console.log(stdout)
 }
 //'http://i.imgur.com/1dgCnen.jpg',
 
 var download = function (uri, filename, callback, failed) {
-  request.head(uri, function (err, res, body) {
+  request({
+    url: uri,
+    method: 'HEAD',
+    headers: rHeaders
+  }, function (err, res, body) {
     if (err)
       return failed(err);
     if (!_.includes(res.headers['content-type'], 'image')) {
       return failed('Failed Headers: ', res.headers['content-type'], 'not supported');
     }
-    request(uri).pipe(fs.createWriteStream('images/' + filename)).on('close', function (err) {
+    request({
+      url: uri,
+      method: 'HEAD',
+      headers: rHeaders
+    }).pipe(fs.createWriteStream('images/' + filename)).on('close', function (err) {
       if (err) {
         return failed(err);
       }
@@ -64,7 +82,7 @@ app.get('/put', function (req, res) {
     res.header("Content-Type", "text/plain");
     res.send('http://mingur.mooo.com/' + name);
   }, function (err) {
-    console.log('Failed Fetch', url, err);
+    console.log('Failed Fetch: ', url, err);
     res.send(500, 'failed');
   });
 
