@@ -21,15 +21,18 @@ function puts(error, stdout, stderr) {
 }
 //'http://i.imgur.com/1dgCnen.jpg',
 
-var download = function (uri, filename, callback) {
+var download = function (uri, filename, callback, failed) {
   request.head(uri, function (err, res, body) {
     if (err)
-      return false;
+      return failed(err);
     if (!_.includes(res.headers['content-type'], 'image')) {
       console.log(res.headers['content-type'], 'not supported');
-      return false;
+      return failed(err);
     }
-    request(uri).pipe(fs.createWriteStream('images/' + filename)).on('close', function () {
+    request(uri).pipe(fs.createWriteStream('images/' + filename)).on('close', function (err) {
+      if (err) {
+        return failed(err);
+      }
       var cliDo = ["convert -resize 320 'images/" + filename + "' 'images/" + filename + "'",
                    " && ",
                    "convert -strip -quality 85% 'images/" + filename + "' 'images/" + filename + "'",
@@ -58,9 +61,13 @@ app.get('/put', function (req, res) {
   var name = shortid.generate() + '.jpg';
   download(url, name, function () {
     console.log(name);
+    res.header("Content-Type", "text/cache-manifest");
+    res.send('http://mingur.mooo.com/' + name);
+  }, function (err) {
+    logger.log(err)
+    res.send(500, 'failed');
   });
-  res.header("Content-Type", "text/cache-manifest");
-  res.send('http://mingur.mooo.com/' + name);
+
 });
 
 app.listen(4000);
