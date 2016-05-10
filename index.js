@@ -79,7 +79,7 @@ app.get('/put', function (req, res) {
   download(url, name, function () {
     console.log('Success: ', name, url);
     res.header("Content-Type", "text/plain");
-    res.send('http://mingur.mooo.com/' + name);
+    res.send('http://139.162.1.190/' + name);
   }, function (err) {
     console.log('Failed Fetch: ', url, err);
     res.send(500, 'failed');
